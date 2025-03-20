@@ -3,15 +3,24 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
+import pandas as pd
+import os
 
 def extract():
-    print("Extracting data from S3")
+    file_path = "data/FCT_RESTAURANT_ORDERS.csv"
+    df = pd.read_csv(file_path)
+    df.to_csv("data/processed_orders.csv", index=False)
+    print("Extracted data from FCT_RESTAURANT_ORDERS.csv")
 
 def transform():
-    print("Transforming data using AWS Glue")
+    df = pd.read_csv("data/processed_orders.csv")
+    df["order_date"] = pd.to_datetime(df["order_date"])
+    df["total_amount"] = df["quantity"] * df["price"]
+    df.to_csv("data/transformed_orders.csv", index=False)
+    print("Transformed data and calculated total_amount")
 
 def load():
-    print("Loading data into Snowflake")
+    print("Loading transformed data into Snowflake")
 
 def notify():
     print("Pipeline completed successfully")
