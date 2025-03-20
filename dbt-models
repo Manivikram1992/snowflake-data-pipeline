@@ -1,0 +1,11 @@
+## DBT Model (Data Transformation)
+```sql
+WITH raw_sales AS (
+    SELECT * FROM {{ source('sales_db', 'raw_sales') }}
+)
+SELECT 
+    id,
+    amount,
+    DATE(order_date) as order_date
+FROM raw_sales
+```
