@@ -6,6 +6,8 @@ This project demonstrates an **ETL pipeline** that:
 2. **Transforms** it using AWS Glue.
 3. **Loads** it into Snowflake.
 4. **Orchestrates** the pipeline using Apache Airflow.
+5. **Runs locally** with Docker.
+6. **Deploys automatically** with GitHub Actions.
 
 ## Architecture
 ![Pipeline Diagram](assets/architecture.png)
@@ -15,6 +17,8 @@ This project demonstrates an **ETL pipeline** that:
 2. Configure AWS Glue with an ETL job to clean and process data.
 3. Set up Apache Airflow and add the DAG (`snowflake_pipeline.py`).
 4. Run the Airflow DAG to complete the ETL process.
+5. Start the local setup using Docker (`docker-compose up`).
+6. Push changes to GitHub to trigger the CI/CD pipeline.
 
 ## Technologies Used
 - **Snowflake** (Data Warehousing)
@@ -23,3 +27,6 @@ This project demonstrates an **ETL pipeline** that:
 - **Apache Airflow** (Orchestration)
 - **DBT** (Data Transformation)
 - **Python** (Scripting)
+- **Docker** (Local Testing)
+- **GitHub Actions** (CI/CD)
+```
