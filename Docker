@@ -1,0 +1,13 @@
+## Docker Setup (For Local Testing)
+```yaml
+version: '3.7'
+services:
+  airflow:
+    image: puckel/docker-airflow
+    environment:
+      - LOAD_EX=y
+      - EXECUTOR=LocalExecutor
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/usr/local/airflow/dags
