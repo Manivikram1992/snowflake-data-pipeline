@@ -7,9 +7,23 @@ from awsglue.context import GlueContext
 from pyspark.context import SparkContext
 
 glueContext = GlueContext(SparkContext())
-dynamic_frame = glueContext.create_dynamic_frame.from_catalog(database="mydb", table_name="sales_data")
-transformed_frame = ApplyMapping.apply(frame=dynamic_frame, mappings=[("id", "string", "id", "int"),
-                                                                      ("amount", "string", "amount", "float")])
-glueContext.write_dynamic_frame.from_options(transformed_frame, connection_type="snowflake",
-                                             connection_options={"dbtable": "sales", "database": "my_snowflake_db"})
+dynamic_frame = glueContext.create_dynamic_frame.from_options(
+    connection_type="s3",
+    connection_options={"paths": ["s3://my-bucket/FCT_RESTAURANT_ORDERS.csv"]},
+    format="csv"
+)
+transformed_frame = ApplyMapping.apply(frame=dynamic_frame, mappings=[
+    ("order_id", "string", "order_id", "int"),
+    ("customer_id", "string", "customer_id", "int"),
+    ("restaurant_id", "string", "restaurant_id", "int"),
+    ("item_id", "string", "item_id", "int"),
+    ("quantity", "string", "quantity", "int"),
+    ("price", "string", "price", "double"),
+    ("order_date", "string", "order_date", "date"),
+    ("region", "string", "region", "string")
+])
+glueContext.write_dynamic_frame.from_options(
+    transformed_frame, connection_type="snowflake",
+    connection_options={"dbtable": "restaurant_orders", "database": "my_snowflake_db"}
+)
 ```
