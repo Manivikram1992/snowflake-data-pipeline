@@ -1,0 +1,29 @@
+## Airflow DAG (Orchestration)
+```python
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from datetime import datetime
+
+def extract():
+    print("Extracting data from S3")
+
+def transform():
+    print("Transforming data using AWS Glue")
+
+def load():
+    print("Loading data into Snowflake")
+
+def notify():
+    print("Pipeline completed successfully")
+
+default_args = {"start_date": datetime(2024, 3, 12), "catchup": False}
+
+dag = DAG("snowflake_pipeline", default_args=default_args, schedule_interval="@daily")
+
+extract_task = PythonOperator(task_id="extract", python_callable=extract, dag=dag)
+transform_task = PythonOperator(task_id="transform", python_callable=transform, dag=dag)
+load_task = PythonOperator(task_id="load", python_callable=load, dag=dag)
+notify_task = PythonOperator(task_id="notify", python_callable=notify, dag=dag)
+
+extract_task >> transform_task >> load_task >> notify_task
+```
